@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>RSVP Responses · Joseph & Styvie</title>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --burg:#722F37;--gold:#C6A66B;--rose:#F5E6E5;--ivory:#F8F4EC;--card:#FFFFEF;
+  --ink:#3a2226;--ink2:#6e5550;--ink3:#8A7765;--line:rgba(114,47,55,.14);
+}
+body{background:linear-gradient(160deg,var(--ivory),var(--rose));min-height:100vh;font-family:'Cormorant Garamond',serif;color:var(--ink);font-size:17px}
+button,input{font:inherit;color:inherit}
+.cin{font-family:'Cinzel',serif;letter-spacing:3px;text-transform:uppercase}
+
+/* gate */
+#gate{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.gate-box{width:100%;max-width:360px;background:var(--card);border:1px solid var(--line);border-top:3px solid var(--gold);border-radius:14px;padding:40px 28px;text-align:center;box-shadow:0 10px 40px rgba(114,47,55,.1)}
+.names{font-family:'Great Vibes',cursive;font-size:44px;color:var(--burg);line-height:1.1}
+.gate-box .cin{font-size:10px;color:var(--ink3);margin:6px 0 26px}
+.pin{width:100%;padding:14px;border:1px solid var(--line);border-radius:10px;background:#fff;text-align:center;font-family:'Cinzel',serif;font-size:22px;letter-spacing:10px;outline:none}
+.pin:focus{border-color:var(--gold)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:12px 26px;border:none;border-radius:30px;background:var(--burg);color:var(--ivory);font-family:'Cinzel',serif;font-size:11px;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:opacity .2s}
+.btn:disabled{opacity:.6;cursor:wait}
+.btn.ghost{background:transparent;color:var(--burg);border:1px solid var(--line)}
+.gate-box .btn{width:100%;margin-top:14px}
+.err{min-height:22px;margin-top:12px;font-style:italic;color:var(--burg)}
+
+/* dashboard */
+#dash{display:none;max-width:980px;margin:0 auto;padding:32px 16px 60px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:24px}
+header .cin{font-size:10px;color:var(--ink3);margin-top:4px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+@media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 12px;text-align:center;position:relative;overflow:hidden}
+.stat::before{content:"";position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent)}
+.stat b{display:block;font-family:'Cinzel',serif;font-weight:400;font-size:34px;color:var(--burg);line-height:1.1}
+.stat span{font-family:'Cinzel',serif;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--ink3)}
+.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
+.tabs{display:flex;background:var(--card);border:1px solid var(--line);border-radius:30px;padding:3px}
+.tab{border:none;background:none;padding:8px 16px;border-radius:30px;font-family:'Cinzel',serif;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--ink2);cursor:pointer}
+.tab[aria-pressed="true"]{background:var(--burg);color:var(--ivory)}
+.search{flex:1;min-width:180px;padding:10px 16px;border:1px solid var(--line);border-radius:30px;background:var(--card);font-style:italic;outline:none}
+.search:focus{border-color:var(--gold)}
+.list{display:flex;flex-direction:column;gap:10px}
+.row{display:grid;grid-template-columns:1fr auto;gap:4px 16px;background:var(--card);border:1px solid var(--line);border-left:3px solid var(--gold);border-radius:10px;padding:16px 18px}
+.row.no{border-left-color:var(--ink3);opacity:.85}
+.row .nm{font-size:21px;font-weight:600}
+.row .meta{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:4px 16px;font-size:15px;color:var(--ink2)}
+.row .meta a{color:var(--burg)}
+.row .msg{grid-column:1/-1;margin-top:6px;padding-top:8px;border-top:1px dashed var(--line);font-style:italic;color:var(--ink2);white-space:pre-wrap;overflow-wrap:anywhere}
+.badge{align-self:start;font-family:'Cinzel',serif;font-size:9px;letter-spacing:2px;text-transform:uppercase;padding:5px 10px;border-radius:20px;white-space:nowrap}
+.badge.yes{background:var(--burg);color:var(--ivory)}
+.badge.no{background:var(--rose);color:var(--ink2)}
+.empty{text-align:center;padding:48px 16px;border:1.5px dashed var(--line);border-radius:12px;font-style:italic;color:var(--ink3)}
+</style>
+</head>
+<body>
+
+<section id="gate">
+  <form class="gate-box" id="gateForm">
+    <div class="names">Joseph &amp; Styvie</div>
+    <div class="cin">RSVP Responses</div>
+    <input class="pin" id="pin" type="password" inputmode="numeric" autocomplete="off" placeholder="••••••" maxlength="20" aria-label="Passcode" autofocus>
+    <button class="btn" id="gateBtn" type="submit">Open</button>
+    <p class="err" id="gateErr" role="alert"></p>
+  </form>
+</section>
+
+<main id="dash">
+  <header>
+    <div>
+      <div class="names">Joseph &amp; Styvie</div>
+      <div class="cin">RSVP Responses &middot; 21.11.2026</div>
+    </div>
+    <div class="actions">
+      <button class="btn ghost" id="refreshBtn" type="button">&#x21bb; Refresh</button>
+      <button class="btn ghost" id="csvBtn" type="button">&#x2193; CSV</button>
+      <button class="btn ghost" id="lockBtn" type="button">Lock</button>
+    </div>
+  </header>
+
+  <div class="stats">
+    <div class="stat"><b id="sTotal">0</b><span>Responses</span></div>
+    <div class="stat"><b id="sYes">0</b><span>Attending</span></div>
+    <div class="stat"><b id="sGuests">0</b><span>Total guests</span></div>
+    <div class="stat"><b id="sNo">0</b><span>Declined</span></div>
+  </div>
+
+  <div class="toolbar">
+    <div class="tabs" role="group" aria-label="Filter">
+      <button class="tab" data-f="all" aria-pressed="true" type="button">All</button>
+      <button class="tab" data-f="yes" aria-pressed="false" type="button">Attending</button>
+      <button class="tab" data-f="no" aria-pressed="false" type="button">Declined</button>
+    </div>
+    <input class="search" id="search" type="search" placeholder="Search name, phone or message…">
+  </div>
+
+  <div class="list" id="list"></div>
+</main>
+
+<script src="config.js"></script>
+<script>
+const KEY='rsvp-passcode';
+const $=id=>document.getElementById(id);
+let rows=[],filter='all',passcode='';
+
+async function fetchRsvps(code){
+  if(SUPABASE_URL.startsWith('YOUR_'))throw new Error('Supabase is not configured yet (config.js).');
+  const res=await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_rsvps`,{
+    method:'POST',
+    headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${SUPABASE_ANON_KEY}`,'Content-Type':'application/json'},
+    body:JSON.stringify({passcode:code}),
+  });
+  if(res.ok)return res.json();
+  const body=await res.json().catch(()=>({}));
+  if(body.code==='28P01')throw new Error('Wrong passcode.');
+  throw new Error(body.message||`Request failed (${res.status}).`);
+}
+
+async function unlock(code){
+  $('gateBtn').disabled=true;$('gateErr').textContent='';
+  try{
+    rows=await fetchRsvps(code);
+    passcode=code;
+    try{sessionStorage.setItem(KEY,code)}catch{}
+    $('gate').style.display='none';$('dash').style.display='block';
+    render();
+  }catch(e){
+    try{sessionStorage.removeItem(KEY)}catch{}
+    $('gate').style.display='';$('dash').style.display='none';
+    $('gateErr').textContent=e.message;$('pin').select();
+  }finally{$('gateBtn').disabled=false}
+}
+
+const fmtDate=s=>new Date(s).toLocaleString('en-GB',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+
+function render(){
+  const yes=rows.filter(r=>r.attending);
+  $('sTotal').textContent=rows.length;
+  $('sYes').textContent=yes.length;
+  $('sGuests').textContent=yes.reduce((n,r)=>n+(r.guests||0),0);
+  $('sNo').textContent=rows.length-yes.length;
+
+  const q=$('search').value.trim().toLowerCase();
+  const shown=rows.filter(r=>
+    (filter==='all'||(filter==='yes')===r.attending)&&
+    (!q||[r.name,r.phone,r.message].some(v=>v&&v.toLowerCase().includes(q))));
+
+  const list=$('list');list.replaceChildren();
+  if(!shown.length){
+    const e=document.createElement('div');e.className='empty';
+    e.textContent=rows.length?'No responses match.':'No responses yet.';
+    list.append(e);return;
+  }
+  for(const r of shown){
+    const el=document.createElement('div');el.className='row'+(r.attending?'':' no');
+    const nm=document.createElement('div');nm.className='nm';nm.textContent=r.name;
+    const b=document.createElement('span');b.className='badge '+(r.attending?'yes':'no');
+    b.textContent=r.attending?`Attending · ${r.guests}`:'Declined';
+    const meta=document.createElement('div');meta.className='meta';
+    if(r.phone){const a=document.createElement('a');a.href='tel:'+r.phone.replace(/[^\d+]/g,'');a.textContent=r.phone;meta.append(a)}
+    const d=document.createElement('span');d.textContent=fmtDate(r.created_at);meta.append(d);
+    el.append(nm,b,meta);
+    if(r.message){const m=document.createElement('div');m.className='msg';m.textContent=r.message;el.append(m)}
+    list.append(el);
+  }
+}
+
+function downloadCsv(){
+  const cols=['created_at','name','phone','attending','guests','message'];
+  const esc=v=>{const s=v==null?'':String(v);return /[",\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s};
+  const csv='﻿'+[cols.join(','),...rows.map(r=>cols.map(c=>esc(r[c])).join(','))].join('\r\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  a.download='rsvps-joseph-styvie.csv';a.click();URL.revokeObjectURL(a.href);
+}
+
+$('gateForm').addEventListener('submit',e=>{e.preventDefault();const c=$('pin').value.trim();if(c)unlock(c)});
+$('refreshBtn').addEventListener('click',async()=>{
+  $('refreshBtn').disabled=true;
+  try{rows=await fetchRsvps(passcode);render()}catch(e){alert(e.message)}
+  finally{$('refreshBtn').disabled=false}
+});
+$('csvBtn').addEventListener('click',downloadCsv);
+$('lockBtn').addEventListener('click',()=>{try{sessionStorage.removeItem(KEY)}catch{}location.reload()});
+$('search').addEventListener('input',render);
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
+  filter=t.dataset.f;
+  document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-pressed',x===t));
+  render();
+}));
+
+let saved='';try{saved=sessionStorage.getItem(KEY)||''}catch{}
+if(saved)unlock(saved);
+</script>
+</body>
+</html>

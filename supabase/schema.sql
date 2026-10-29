@@ -18,3 +18,24 @@ create policy "anon can insert rsvp"
   on public.rsvps for insert
   to anon
   with check (true);
+
+-- responses.html reads RSVPs through this function. The passcode is checked
+-- here in the database, so it never appears in the published page and the
+-- table itself stays unreadable with the anon key.
+create or replace function public.get_rsvps(passcode text)
+returns setof public.rsvps
+language plpgsql
+security definer
+set search_path = public
+as $$
+begin
+  if passcode is distinct from '211126' then
+    perform pg_sleep(1);  -- slow down guessing
+    raise exception 'invalid passcode' using errcode = '28P01';
+  end if;
+  return query select * from public.rsvps order by created_at desc;
+end;
+$$;
+
+revoke all on function public.get_rsvps(text) from public;
+grant execute on function public.get_rsvps(text) to anon;
