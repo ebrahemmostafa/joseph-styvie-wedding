@@ -1,6 +1,6 @@
 # Joseph & Styvie · 21.11.2026
 
-Wedding invitation — Saturday 21 November 2026, 5:00 PM, Novotel Cairo Airport.
+Engagement invitation — Saturday 21 November 2026, 5:00 PM, Novotel Cairo Airport.
 
 ## RSVP setup (Supabase)
 
