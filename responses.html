@@ -116,10 +116,12 @@ async function fetchRsvps(code){
     headers:{apikey:SUPABASE_ANON_KEY,Authorization:`Bearer ${SUPABASE_ANON_KEY}`,'Content-Type':'application/json'},
     body:JSON.stringify({passcode:code}),
   });
-  if(res.ok)return res.json();
   const body=await res.json().catch(()=>({}));
-  if(body.code==='28P01')throw new Error('Wrong passcode.');
-  throw new Error(body.message||`Request failed (${res.status}).`);
+  if(!res.ok)throw new Error(body.message||`Request failed (${res.status}).`);
+  if(body.ok)return body.rows;
+  throw new Error(body.error==='locked'
+    ?'Too many wrong attempts. Try again in 15 minutes.'
+    :'Wrong passcode.');
 }
 
 async function unlock(code){
@@ -173,7 +175,8 @@ function render(){
 
 function downloadCsv(){
   const cols=['created_at','name','phone','attending','guests','message'];
-  const esc=v=>{const s=v==null?'':String(v);return /[",\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s};
+  // Prefix cells Excel would run as formulas (guests write these values).
+  const esc=v=>{let s=v==null?'':String(v);if(/^[=+\-@\t\r]/.test(s))s="'"+s;return /[",\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s};
   const csv='﻿'+[cols.join(','),...rows.map(r=>cols.map(c=>esc(r[c])).join(','))].join('\r\n');
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));

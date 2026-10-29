@@ -13,8 +13,15 @@ The anon key is safe to publish: row-level security only lets guests insert RSVP
 
 ## Viewing responses
 
-Open `responses.html` and enter the passcode. It shows totals (responses, attending,
-total guests, declined), filters, search, and a CSV download.
+Set the passcode once in the Supabase SQL Editor (after running `schema.sql`).
+Don't commit it — this repo is public:
 
-The passcode is checked inside the database by the `get_rsvps` function in
-`supabase/schema.sql`, not in the page. To change it, edit it there and re-run the SQL.
+```sql
+select private.set_rsvp_passcode('your-passcode');
+```
+
+Run the same line again to change it. Only a bcrypt hash is stored, and after 10 wrong
+guesses in 15 minutes the page refuses all attempts until the window passes.
+
+Then open `responses.html` and enter the passcode. It shows totals (responses, attending,
+total guests, declined), filters, search, and a CSV download.
