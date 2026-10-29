@@ -1,4 +1,17 @@
--- Run this in Supabase → SQL Editor.
+-- Run this in Supabase → SQL Editor. Safe to re-run.
+
+-- If an older, differently shaped rsvps table exists, move it aside (kept, not deleted).
+do $$
+begin
+  if to_regclass('public.rsvps') is not null and not exists (
+    select 1 from information_schema.columns
+    where table_schema = 'public' and table_name = 'rsvps' and column_name = 'attending'
+  ) then
+    execute format('alter table public.rsvps rename to %I',
+                   'rsvps_legacy_' || to_char(now(), 'YYYYMMDD_HH24MISS'));
+  end if;
+end $$;
+
 create table if not exists public.rsvps (
   id          bigint generated always as identity primary key,
   created_at  timestamptz not null default now(),
@@ -87,3 +100,13 @@ $$;
 
 revoke all on function public.get_rsvps(text) from public;
 grant execute on function public.get_rsvps(text) to anon;
+
+-- Make the API pick up the changes now.
+notify pgrst, 'reload schema';
+
+-- Check: shows each rsvps* table with its columns, and whether a passcode is set.
+select table_name as "table", string_agg(column_name, ', ' order by ordinal_position) as columns,
+       (select count(*) from private.settings where k = 'rsvp_pass') > 0 as passcode_set
+from information_schema.columns
+where table_schema = 'public' and table_name like 'rsvps%'
+group by table_name;
