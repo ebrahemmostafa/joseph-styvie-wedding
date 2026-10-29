@@ -52,6 +52,9 @@ revoke all on function private.set_rsvp_passcode(text) from public, anon, authen
 -- It returns instead of raising so a failed guess is recorded (an exception
 -- would roll that back). After 10 wrong guesses in 15 minutes, all attempts are
 -- refused until the window passes, which caps guessing at ~1,000 tries a day.
+-- The lockout deliberately also refuses the right passcode: otherwise it
+-- wouldn't slow an attacker at all. Worst case, the couple waits 15 minutes
+-- (or re-runs private.set_rsvp_passcode, which clears it).
 drop function if exists public.get_rsvps(text);
 create or replace function public.get_rsvps(passcode text)
 returns json
@@ -62,6 +65,9 @@ as $$
 declare
   stored text;
 begin
+  -- One attempt at a time, so parallel guesses can't all pass the count
+  -- check before their failures are recorded.
+  perform pg_advisory_xact_lock(hashtext('public.get_rsvps'));
   delete from private.failed_logins where at < now() - interval '15 minutes';
   if (select count(*) from private.failed_logins) >= 10 then
     return json_build_object('ok', false, 'error', 'locked');
