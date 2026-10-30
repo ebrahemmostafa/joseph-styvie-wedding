@@ -34,8 +34,7 @@ button,input{font:inherit;color:inherit}
 header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:24px}
 header .cin{font-size:10px;color:var(--ink3);margin-top:4px}
 .actions{display:flex;gap:8px;flex-wrap:wrap}
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
-@media(max-width:640px){.stats{grid-template-columns:repeat(2,1fr)}}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 12px;text-align:center;position:relative;overflow:hidden}
 .stat::before{content:"";position:absolute;inset:0 0 auto;height:2px;background:linear-gradient(to right,transparent,var(--gold),transparent)}
 .stat b{display:block;font-family:'Cinzel',serif;font-weight:400;font-size:34px;color:var(--burg);line-height:1.1}
@@ -87,7 +86,6 @@ header .cin{font-size:10px;color:var(--ink3);margin-top:4px}
   <div class="stats">
     <div class="stat"><b id="sTotal">0</b><span>Responses</span></div>
     <div class="stat"><b id="sYes">0</b><span>Attending</span></div>
-    <div class="stat"><b id="sGuests">0</b><span>Total guests</span></div>
     <div class="stat"><b id="sNo">0</b><span>Declined</span></div>
   </div>
 
@@ -145,7 +143,6 @@ function render(){
   const yes=rows.filter(r=>r.attending);
   $('sTotal').textContent=rows.length;
   $('sYes').textContent=yes.length;
-  $('sGuests').textContent=yes.reduce((n,r)=>n+(r.guests||0),0);
   $('sNo').textContent=rows.length-yes.length;
 
   const q=$('search').value.trim().toLowerCase();
@@ -163,7 +160,7 @@ function render(){
     const el=document.createElement('div');el.className='row'+(r.attending?'':' no');
     const nm=document.createElement('div');nm.className='nm';nm.textContent=r.name;
     const b=document.createElement('span');b.className='badge '+(r.attending?'yes':'no');
-    b.textContent=r.attending?`Attending · ${r.guests}`:'Declined';
+    b.textContent=r.attending?'Attending':'Declined';
     const meta=document.createElement('div');meta.className='meta';
     if(r.phone){const a=document.createElement('a');a.href='tel:'+r.phone.replace(/[^\d+]/g,'');a.textContent=r.phone;meta.append(a)}
     const d=document.createElement('span');d.textContent=fmtDate(r.created_at);meta.append(d);
@@ -174,7 +171,7 @@ function render(){
 }
 
 function downloadCsv(){
-  const cols=['created_at','name','phone','attending','guests','message'];
+  const cols=['created_at','name','phone','attending','message'];
   // Prefix cells Excel would run as formulas (guests write these values).
   const esc=v=>{let s=v==null?'':String(v);if(/^[=+\-@\t\r]/.test(s))s="'"+s;return /[",\n\r]/.test(s)?`"${s.replace(/"/g,'""')}"`:s};
   const csv='﻿'+[cols.join(','),...rows.map(r=>cols.map(c=>esc(r[c])).join(','))].join('\r\n');

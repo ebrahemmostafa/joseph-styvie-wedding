@@ -885,10 +885,6 @@ footer{background:var(--ink);padding:60px 28px 48px;text-align:center}
           <input type="radio" name="attending" id="att-no" value="no"><label for="att-no">Regretfully decline</label>
         </div>
 
-        <span class="rsvp-lbl" id="guestsLbl">Number of guests (including you)</span>
-        <select class="wish-inp" name="guests" id="guestsSel">
-          <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
-        </select>
 
         <textarea class="wish-inp" name="message" placeholder="A message for Joseph &amp; Styvie (optional)" maxlength="1000"></textarea>
 
@@ -1132,15 +1128,8 @@ tick();setInterval(tick,1000);
 const rsvpForm=document.getElementById('rsvpForm');
 const rsvpStatus=document.getElementById('rsvpStatus');
 const rsvpBtn=document.getElementById('rsvpBtn');
-const guestsSel=document.getElementById('guestsSel');
-const guestsLbl=document.getElementById('guestsLbl');
 const F=rsvpForm.elements;
 
-rsvpForm.addEventListener('change',()=>{
-  const going=F.attending.value==='yes';
-  guestsSel.style.display=going?'':'none';
-  guestsLbl.style.display=going?'':'none';
-});
 
 rsvpForm.addEventListener('submit',async e=>{
   e.preventDefault();
@@ -1151,7 +1140,7 @@ rsvpForm.addEventListener('submit',async e=>{
     name,
     phone:F.phone.value.trim()||null,
     attending,
-    guests:attending?Number(guestsSel.value):0,
+    guests:attending?1:0,  // one invitation per person
     message:F.message.value.trim()||null,
   };
   if(SUPABASE_URL.startsWith('YOUR_')){rsvpStatus.textContent='RSVP is not configured yet.';return;}

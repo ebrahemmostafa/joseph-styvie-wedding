@@ -24,4 +24,4 @@ Run the same line again to change it. Only a bcrypt hash is stored, and after 10
 guesses in 15 minutes the page refuses all attempts until the window passes.
 
 Then open `responses.html` and enter the passcode. It shows totals (responses, attending,
-total guests, declined), filters, search, and a CSV download.
+declined), filters, search, and a CSV download.
