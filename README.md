@@ -1,4 +1,4 @@
-# Joseph & Styvie · 21.11.2026
+# Styvie & Joseph · 21.11.2026
 
 Engagement invitation — Saturday 21 November 2026, 5:00 PM, Novotel Cairo Airport.
 

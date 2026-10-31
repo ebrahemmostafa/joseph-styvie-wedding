@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="robots" content="noindex, nofollow">
-<title>RSVP Responses · Joseph & Styvie</title>
+<title>RSVP Responses · Styvie & Joseph</title>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Cinzel:wght@400;500&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -62,7 +62,7 @@ header .cin{font-size:10px;color:var(--ink3);margin-top:4px}
 
 <section id="gate">
   <form class="gate-box" id="gateForm">
-    <div class="names">Joseph &amp; Styvie</div>
+    <div class="names">Styvie &amp; Joseph</div>
     <div class="cin">RSVP Responses</div>
     <input class="pin" id="pin" type="password" inputmode="numeric" autocomplete="off" placeholder="••••••" maxlength="20" aria-label="Passcode" autofocus>
     <button class="btn" id="gateBtn" type="submit">Open</button>
@@ -73,7 +73,7 @@ header .cin{font-size:10px;color:var(--ink3);margin-top:4px}
 <main id="dash">
   <header>
     <div>
-      <div class="names">Joseph &amp; Styvie</div>
+      <div class="names">Styvie &amp; Joseph</div>
       <div class="cin">RSVP Responses &middot; 21.11.2026</div>
     </div>
     <div class="actions">
@@ -177,7 +177,7 @@ function downloadCsv(){
   const csv='﻿'+[cols.join(','),...rows.map(r=>cols.map(c=>esc(r[c])).join(','))].join('\r\n');
   const a=document.createElement('a');
   a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
-  a.download='rsvps-joseph-styvie.csv';a.click();URL.revokeObjectURL(a.href);
+  a.download='rsvps-styvie-joseph.csv';a.click();URL.revokeObjectURL(a.href);
 }
 
 $('gateForm').addEventListener('submit',e=>{e.preventDefault();const c=$('pin').value.trim();if(c)unlock(c)});
